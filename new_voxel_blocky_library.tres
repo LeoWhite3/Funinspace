@@ -1,0 +1,4 @@
+[gd_resource type="VoxelBlockyLibrary" format=3 uid="uid://5o6diajrgi2q"]
+
+[resource]
+models = Array[VoxelBlockyModel]([null, null, null, null, null])

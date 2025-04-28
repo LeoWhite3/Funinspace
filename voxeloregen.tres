@@ -1,0 +1,136 @@
+[gd_resource type="VoxelGeneratorGraph" load_steps=2 format=3 uid="uid://c3okqjdfoqrjm"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_aqk2v"]
+
+[resource]
+graph_data = {
+"connections": [[17, 0, 14, 1], [14, 0, 15, 2], [14, 0, 19, 2], [14, 0, 23, 2], [14, 0, 25, 2], [15, 0, 9, 0], [16, 0, 14, 0], [2, 0, 5, 0], [18, 0, 14, 2], [19, 0, 20, 0], [20, 0, 31, 0], [22, 0, 20, 2], [23, 0, 24, 0], [24, 0, 30, 0], [25, 0, 26, 0], [26, 0, 30, 1], [27, 0, 24, 2], [28, 0, 26, 2], [29, 0, 32, 0], [30, 0, 31, 1], [31, 0, 29, 1], [5, 0, 4, 0], [6, 0, 9, 2], [9, 0, 29, 0]],
+"nodes": {
+"1": {
+"gui_position": Vector2(420, -200),
+"type": "InputX"
+},
+"14": {
+"auto_connect": true,
+"gui_position": Vector2(-580, 520),
+"noise": SubResource("FastNoiseLite_aqk2v"),
+"type": "Noise3D"
+},
+"15": {
+"a": 1.0,
+"b": 0.0,
+"gui_position": Vector2(-300, 320),
+"threshold": 0.3,
+"type": "Select"
+},
+"16": {
+"gui_position": Vector2(-800, 440),
+"type": "InputX"
+},
+"17": {
+"gui_position": Vector2(-800, 520),
+"type": "InputY"
+},
+"18": {
+"gui_position": Vector2(-800, 600),
+"type": "InputZ"
+},
+"19": {
+"a": 2.0,
+"b": 0.0,
+"gui_position": Vector2(-300, 500),
+"threshold": 0.15,
+"type": "Select"
+},
+"2": {
+"gui_position": Vector2(420, -100),
+"type": "InputY"
+},
+"20": {
+"b": 0.0,
+"gui_position": Vector2(20, 420),
+"threshold": 10.0,
+"type": "Select"
+},
+"22": {
+"gui_position": Vector2(-100, 560),
+"type": "InputY"
+},
+"23": {
+"a": 3.0,
+"b": 0.0,
+"gui_position": Vector2(-280, 660),
+"threshold": 0.08,
+"type": "Select"
+},
+"24": {
+"b": 0.0,
+"gui_position": Vector2(20, 660),
+"threshold": 0.0,
+"type": "Select"
+},
+"25": {
+"a": 4.0,
+"b": 0.0,
+"gui_position": Vector2(-280, 840),
+"threshold": 0.3,
+"type": "Select"
+},
+"26": {
+"b": 0.0,
+"gui_position": Vector2(0, 840),
+"threshold": -20.0,
+"type": "Select"
+},
+"27": {
+"gui_position": Vector2(-120, 760),
+"type": "InputY"
+},
+"28": {
+"gui_position": Vector2(-120, 920),
+"type": "InputY"
+},
+"29": {
+"gui_position": Vector2(440, 280),
+"type": "Max"
+},
+"3": {
+"gui_position": Vector2(420, 0),
+"type": "InputZ"
+},
+"30": {
+"gui_position": Vector2(180, 660),
+"type": "Max"
+},
+"31": {
+"gui_position": Vector2(320, 460),
+"type": "Max"
+},
+"32": {
+"gui_position": Vector2(660, 280),
+"type": "OutputType"
+},
+"4": {
+"auto_connect": true,
+"gui_position": Vector2(700, -140),
+"type": "OutputSDF"
+},
+"5": {
+"auto_connect": true,
+"gui_position": Vector2(540, -80),
+"height": 0.0,
+"type": "SdfPlane"
+},
+"6": {
+"gui_position": Vector2(-100, 360),
+"type": "InputY"
+},
+"9": {
+"b": 0.0,
+"gui_position": Vector2(20, 240),
+"threshold": 20.0,
+"type": "Select"
+}
+},
+"version": 2
+}
