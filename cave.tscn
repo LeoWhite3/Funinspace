@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3 uid="uid://2evscrgnkyr4"]
+
+[ext_resource type="Script" uid="uid://bm82iws6ymh0e" path="res://CaveBuilder.gd" id="1_yhhov"]
+
+[sub_resource type="GDScript" id="GDScript_yhhov"]
+script/source = "extends Node3D
+
+@export var mouse_sensitivity := 0.002
+@export var move_speed := 8.0
+@export var sprint_multiplier := 2.0
+
+@onready var camera = $Camera3D
+var rotation_x = 0.0
+var rotation_y = 0.0
+
+func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _unhandled_input(event):
+	if event is InputEventMouseMotion:
+		rotate_camera(event)
+
+	if event.is_action_pressed(\"ui_cancel\"):  # Esc key
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _process(delta):
+	move_camera(delta)
+
+func rotate_camera(event: InputEventMouseMotion):
+	rotation_x -= event.relative.y * mouse_sensitivity
+	rotation_y -= event.relative.x * mouse_sensitivity
+	rotation_x = clamp(rotation_x, -1.5, 1.5)
+
+	rotation = Vector3(rotation_x, rotation_y, 0)
+	camera.rotation = Vector3(rotation_x, 0, 0)
+	rotation_degrees.y = rad_to_deg(rotation_y)
+
+func move_camera(delta):
+	var velocity = Vector3.ZERO
+	var speed = move_speed
+	if Input.is_action_pressed(\"Move_forward\"):
+		velocity -= transform.basis.z
+	if Input.is_action_pressed(\"Move_left\"):
+		velocity += transform.basis.z
+	if Input.is_action_pressed(\"Move_Back\"):
+		velocity -= transform.basis.x
+	if Input.is_action_pressed(\"Move_right\"):
+		velocity += transform.basis.x
+	if Input.is_action_pressed(\"Jump\"):
+		velocity += transform.basis.y
+
+	if velocity != Vector3.ZERO:
+		position += velocity.normalized() * speed * delta
+"
+
+[node name="Cave" type="Node3D"]
+
+[node name="CaveBuilder" type="Node3D" parent="."]
+script = ExtResource("1_yhhov")
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="CaveBuilder"]
+visible = false
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="CaveBuilder/CSGCombiner3D"]
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CaveBuilder/CSGCombiner3D"]
+transform = Transform3D(0.5, 0.866025, 0, -0.866025, 0.5, 0, 0, 0, 1, 1, 0, 0)
+
+[node name="CSGPolygon3D" type="CSGCylinder3D" parent="CaveBuilder/CSGCombiner3D"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="CameraRig" type="Node3D" parent="."]
+visible = false
+script = SubResource("GDScript_yhhov")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 15, 0)

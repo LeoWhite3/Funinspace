@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dw1kn1c1r615l"
+path="res://.godot/imported/08 - Minecraft.mp3-ccc2ac946cf43bd0ba404c1556b3ffa8.mp3str"
+
+[deps]
+
+source_file="res://08 - Minecraft.mp3"
+dest_files=["res://.godot/imported/08 - Minecraft.mp3-ccc2ac946cf43bd0ba404c1556b3ffa8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

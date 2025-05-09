@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 files=["res://GodotVoxelExtension/addons/zylann.voxel/voxel.gdextension"]
 
+[global_group]
+
+player=""
+
 [input]
 
 Move_forward={
