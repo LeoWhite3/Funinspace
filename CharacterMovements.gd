@@ -3,6 +3,10 @@ extends CharacterBody3D
 @export var speed = 5.0
 @export var mouse_sense = 0.003
 @export var jump_velocity = 5.0
+var is_jetpack_enabled := false
+var is_jetpack_active := false
+@export var jetpack_force := .5
+
 
 @onready var camera = $Camera3D
 @onready var click_ray = $Camera3D/click_ray 
@@ -13,6 +17,7 @@ extends CharacterBody3D
 @onready var player_data = get_parent().get_node("PlayerData")
 @onready var player_hud = get_parent().get_node("Ui/PlayerHUD")
 @onready var coord_label = player_hud.get_node("Coords")
+@onready var pause_menu := get_node("/root/World/Ui/PauseMenu")
 
 var input_enabled = true
 var rotation_y = 0.0
@@ -23,7 +28,31 @@ var dig_cooldown = 0.5  # updated via upgrade
 var dig_timer = 0.0  # counts down every frame
 
 func _ready():
-	await get_tree().process_frame
+	await get_tree().process_frame  # wait for scene setup
+
+	# Wait until player_data is available
+	if not player_data:
+		player_data = get_parent().get_node_or_null("PlayerData")
+	if not player_data or not upgrade_manager:
+		push_error("❌ player_data or upgrade_manager not ready.")
+		return
+
+	SaveManager.load_game(player_data, upgrade_manager)
+	upgrade_manager.apply_upgrade_effects()
+	upgrade_manager.update_ui()
+	var stats = player_data.get_status()
+	player_hud.update_status(
+		stats["health"],
+		stats["water"],
+		stats["shovel_energy"],
+		stats["money"]
+	)
+	print("✅ HUD Stats:", stats)
+
+
+	print("📦 Loaded stats:", player_data.stats)
+	print("🔧 Upgrade levels:", upgrade_manager.upgrades)
+
 	voxel_terrain = get_node_or_null("/root/World/ground")
 	if voxel_terrain == null:
 		push_error("❌ Could not find VoxelTerrain at /root/World/ground")
@@ -34,10 +63,38 @@ func _ready():
 		dig_cooldown = player_data.stats["dig_cooldown"]
 		print("🕒 Starting dig cooldown:", dig_cooldown)
 
+func update_mouse_visibility():
+	var ui_open := false
+
+	# Check each UI panel
+	if pause_menu and pause_menu.visible:
+		ui_open = true
+	if get_node_or_null("/root/World/Ui/UpgradeUi") and get_node("/root/World/Ui/UpgradeUi").visible:
+		ui_open = true
+	# Add more checks for other panels here if needed
+
+	if ui_open:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
 func _physics_process(delta):
 	var direction = Vector3.ZERO
 	var forward = -transform.basis.z
 	var right = transform.basis.x
+	# Apply gravity
+	velocity.y -= gravity * delta
+	
+	if get_tree().paused:
+		return
+		
+	# Jetpack lift
+	is_jetpack_active = false
+	if is_jetpack_enabled and Input.is_action_pressed("Jump"):
+		velocity.y += jetpack_force
+		is_jetpack_active = true
+
 
 	if coord_label:
 		var pos = global_position
@@ -78,23 +135,54 @@ func _unhandled_input(event):
 		camera.rotation.x = pitch
 
 func _input(event):
+	if event.is_action_pressed("menu"):
+		if pause_menu:
+			pause_menu.visible = not pause_menu.visible
+			update_mouse_visibility()
+	
+			
+	if event.is_action_pressed("JetPackToggle"):
+		is_jetpack_enabled = !is_jetpack_enabled
+		print("🚀 Jetpack toggled:", is_jetpack_enabled)
+		
 	if event.is_action_pressed("Interact"):
 		if click_ray and click_ray.is_colliding():
 			var collider = click_ray.get_collider()
 			if collider.is_in_group("UpgradePanel"):
+				update_mouse_visibility()
 				collider.call("on_panel_interacted")
 
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var collider = click_ray.get_collider()
-		if collider and collider.name == "ground":
-			var pos = dig_ray.get_collision_point()
-			dig_at(pos)
+
+		if click_ray and click_ray.is_colliding():
+			var collider = click_ray.get_collider()
+
+			if collider and collider.is_in_group("Ore"):
+				if collider.has_method("on_hit"):
+					print("✅ Calling on_hit() on ore")
+					collider.call("on_hit")
+					print("🎒 Inventory after collection:", player_data.inventory)
+					return
+
+		# ✅ Dig only on mouse click (not always)
+		if dig_ray and dig_ray.is_colliding():
+			var dig_target = dig_ray.get_collision_point()
+			dig_at(dig_target)
 
 func dig_at(position: Vector3):
 	if dig_timer > 0:
 		var time_left = round(dig_timer * 100) / 100.0
 		print("⏳ Dig on cooldown:", time_left, "sec left.")
 		return
+		
+	if click_ray and click_ray.is_colliding():
+		var collider = click_ray.get_collider()
+		if collider and collider.is_in_group("Ore"):
+			if collider.has_method("on_hit"):
+				collider.call("on_hit")
+				return  # Don't dig terrain if we hit ore
+
+
 
 	var tool = voxel_terrain.get_voxel_tool()
 	tool.mode = VoxelTool.MODE_REMOVE
@@ -138,8 +226,3 @@ func set_light_brightness(value: float):
 		print("- Attenuation:", spotlight.spot_attenuation)
 	else:
 		print("⚠️ Spotlight not found.")
-
-
-
-		
-		

@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://cn8ucjuuligr7"]
+
+[ext_resource type="Script" uid="uid://dga8oyd5bev10" path="res://Glorp.gd" id="1_vc6f6"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vc6f6"]
+radius = 15.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6aojl"]
+radius = 0.4
+height = 1.75
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_81djk"]
+radius = 0.4
+height = 1.75
+
+[node name="Glorp" type="CharacterBody3D"]
+floor_stop_on_slope = false
+floor_max_angle = 3.14159
+script = ExtResource("1_vc6f6")
+dig_delay = 1.5
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_vc6f6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_6aojl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_81djk")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

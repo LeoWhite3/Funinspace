@@ -3,9 +3,9 @@ extends Node
 @onready var player_data = get_parent().get_node("PlayerData") # Assign this to your PlayerData node in the editor
 
 var upgrades = {
-	"drill": {"level": 0, "base_value": 0.65, "base_cost": 1000, "scale": 0.005},
-	"speed": {"level": 0, "base_value": 1.0,  "base_cost": 1000, "scale": 0.005},
-	"light": {"level": 0, "base_value": 1.0,  "base_cost": 1000, "scale": 0.005}
+	"drill": {"level": 0, "base_value": 1.00, "base_cost": 1000, "scale": 0.005},
+	"speed": {"level": 0, "base_value": 2.00,  "base_cost": 1000, "scale": 0.005},
+	"light": {"level": 0, "base_value": 2.0,  "base_cost": 1000, "scale": 0.005}
 }
 
 func get_upgrade_value(type: String) -> float:
@@ -32,6 +32,21 @@ func upgrade(type: String):
 			player_data.set_stat("headlight_brightness", value)
 			print("✅ LIGHT upgraded: brightness =", player_data.get_stat("headlight_brightness"))
 
+func apply_upgrade_effects():
+	for type in upgrades.keys():
+		match type:
+			"drill":
+				player_data.set_stat("dig_radius", get_upgrade_value("drill"))
+			"speed":
+				player_data.set_stat("dig_cooldown", 0.5 / get_upgrade_value("speed"))
+			"light":
+				player_data.set_stat("headlight_brightness", get_upgrade_value("light"))
+
+func update_ui():
+	$/root/World/Ui/UpgradeUi/RadiusButton.text = "Buy - $%d" % get_upgrade_cost("drill")
+	$/root/World/Ui/UpgradeUi/SpeedButton.text = "Buy - $%d" % get_upgrade_cost("speed")
+	$/root/World/Ui/UpgradeUi/LightButton.text = "Buy - $%d" % get_upgrade_cost("light")
+	$"/root/World/Ui/UpgradeUi".queue_redraw()
 
 
 	

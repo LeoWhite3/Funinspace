@@ -1,32 +1,16 @@
 shader_type spatial;
-render_mode cull_back;
 
-varying vec3 world_position;
-
-void vertex() {
-	world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-}
-
-// Basic hash function for randomness
-float rand(vec3 co) {
-	return fract(sin(dot(co, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
-}
+uniform vec4 ore_color : source_color;
+uniform float sparkle_intensity : hint_range(0.0, 1.0) = 0.0;
 
 void fragment() {
-	vec3 color = vec3(0.4, 0.25, 0.1); // default dirt
+	vec3 base_color = ore_color.rgb;
 
-	float r = rand(world_position * 0.25);
+	// Sparkle: based on view angle and UV noise (cheap pseudo sparkle)
+	float sparkle = pow(abs(dot(NORMAL, VIEW)), 10.0) * sparkle_intensity;
 
-	// Simulated ore logic
-	if (world_position.y < -20.0 && r < 0.03) {
-		color = vec3(0.2, 0.6, 1.0); // Diamond
-	} else if (world_position.y < 0.0 && r < 0.08) {
-		color = vec3(1.0, 0.85, 0.2); // Gold
-	} else if (world_position.y < 10.0 && r < 0.15) {
-		color = vec3(0.8); // Silver
-	} else if (world_position.y < 20.0 && r < 0.3) {
-		color = vec3(0.9, 0.4, 0.1); // Copper
-	}
-
-	ALBEDO = color;
+	// Blend base color with white based on sparkle
+	ALBEDO = mix(base_color, vec3(1.0), sparkle);
+	METALLIC = 0.3 + sparkle * 0.7;
+	ROUGHNESS = 1.0 - sparkle;
 }

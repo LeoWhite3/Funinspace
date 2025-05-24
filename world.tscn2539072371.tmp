@@ -1,11 +1,9 @@
-[gd_scene load_steps=36 format=3 uid="uid://c7nkqmqdjh2ud"]
+[gd_scene load_steps=34 format=3 uid="uid://c7nkqmqdjh2ud"]
 
 [ext_resource type="Script" uid="uid://dbr81rxantexg" path="res://CharacterMovements.gd" id="2_tlwt5"]
-[ext_resource type="Shader" uid="uid://bos8pkr4p00bc" path="res://screen.gdshader" id="4_2o6r5"]
 [ext_resource type="Script" uid="uid://da51jsckk1igw" path="res://UpgraePanel.gd" id="5_gbfbk"]
 [ext_resource type="Script" uid="uid://ceka1r41pk7c2" path="res://UpgradeManager.gd" id="5_pkg7o"]
 [ext_resource type="Script" uid="uid://b8b2yyovji2xs" path="res://PlayerData.gd" id="6_gbfbk"]
-[ext_resource type="Script" uid="uid://bh60qd2nuj5t4" path="res://PauseMenu.gd" id="6_k3n1d"]
 [ext_resource type="Script" uid="uid://doxs6abm1iku" path="res://UI.gd" id="7_ioo17"]
 [ext_resource type="Script" uid="uid://iqiqw747i7vw" path="res://PlayerHud.gd" id="7_wse8f"]
 [ext_resource type="Shader" uid="uid://s0m04p3v6sjb" path="res://sky.gdshader" id="9_ic0uy"]
@@ -44,17 +42,16 @@ depth_draw_mode = 2
 shading_mode = 0
 albedo_color = Color(0.568627, 0.890196, 1, 0)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_70uel"]
-render_priority = 0
-shader = ExtResource("4_2o6r5")
-shader_parameter/screen_color = Color(0, 1, 1, 1)
-shader_parameter/scanline_intensity = 0.05
-shader_parameter/scanline_density = 300.0
-shader_parameter/pulse_speed = 2.0
-shader_parameter/pulse_strength = 0.08
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ic0uy"]
+transparency = 1
+blend_mode = 4
+depth_draw_mode = 2
+albedo_color = Color(0.138449, 0.977863, 0.693096, 1)
+emission_enabled = true
+emission = Color(0.266849, 0.553364, 0.59509, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_gbfbk"]
-material = SubResource("ShaderMaterial_70uel")
+material = SubResource("StandardMaterial3D_ic0uy")
 size = Vector3(1, 0.1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ioo17"]
@@ -296,47 +293,6 @@ offset_right = 1139.0
 offset_bottom = 44.0
 text = "(0,0,0)"
 
-[node name="PauseMenu" type="CanvasLayer" parent="Ui"]
-script = ExtResource("6_k3n1d")
-
-[node name="Panel" type="Panel" parent="Ui/PauseMenu"]
-offset_left = 368.0
-offset_top = 194.0
-offset_right = 688.0
-offset_bottom = 379.0
-
-[node name="Pause" type="Label" parent="Ui/PauseMenu/Panel"]
-layout_mode = 2
-offset_left = 110.0
-offset_top = 8.0
-offset_right = 205.0
-offset_bottom = 31.0
-text = "Pause Menu"
-
-[node name="Save" type="Button" parent="Ui/PauseMenu/Panel"]
-layout_mode = 2
-offset_left = 111.0
-offset_top = 50.0
-offset_right = 205.0
-offset_bottom = 81.0
-text = "Save Game"
-
-[node name="Reset" type="Button" parent="Ui/PauseMenu/Panel"]
-layout_mode = 2
-offset_left = 107.0
-offset_top = 90.0
-offset_right = 208.0
-offset_bottom = 121.0
-text = "Reset Game"
-
-[node name="Quit" type="Button" parent="Ui/PauseMenu/Panel"]
-layout_mode = 2
-offset_left = 111.0
-offset_top = 133.0
-offset_right = 203.0
-offset_bottom = 164.0
-text = "Quit Game"
-
 [node name="PlayerData" type="Node" parent="."]
 script = ExtResource("6_gbfbk")
 
@@ -357,13 +313,9 @@ shadow_enabled = true
 [node name="CaveSpawner" type="Node3D" parent="."]
 script = ExtResource("9_ioo17")
 cave_scene = ExtResource("10_ic0uy")
-max_cave_radius = 30.0
-ore_inset_distance = 0.025
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_ic0uy")
 volume_db = -7.432
 autoplay = true
 parameters/looping = true
-
-[node name="SaveManager" type="Node" parent="."]

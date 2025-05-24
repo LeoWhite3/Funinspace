@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://cfq6kfrjr10n8"]
+
+[ext_resource type="Script" uid="uid://cf6axjafk527x" path="res://ore.gd" id="1_wctjg"]
+[ext_resource type="Shader" uid="uid://yj5rr8pdf38p" path="res://debug_ore_shader.gdshader" id="2_8t7vj"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_d3jr8"]
+radius = 0.175
+height = 0.5
+radial_segments = 52
+rings = 0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ui7ix"]
+render_priority = 0
+shader = ExtResource("2_8t7vj")
+shader_parameter/ore_color = Color(0, 0, 0, 1)
+shader_parameter/sparkle_intensity = 0.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wctjg"]
+radius = 0.45
+height = 0.9
+
+[node name="Ore" type="StaticBody3D" groups=["Ore"]]
+script = ExtResource("1_wctjg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_d3jr8")
+surface_material_override/0 = SubResource("ShaderMaterial_ui7ix")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_wctjg")
