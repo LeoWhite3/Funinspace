@@ -28,3 +28,11 @@ surface_material_override/0 = SubResource("ShaderMaterial_ui7ix")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_wctjg")
+
+[node name="HitSound" type="AudioStreamPlayer3D" parent="."]
+volume_db = -20.0
+
+[node name="CollectSound" type="AudioStreamPlayer3D" parent="."]
+volume_db = 30.0
+
+[node name="OreBreak" type="AudioStreamPlayer3D" parent="."]
