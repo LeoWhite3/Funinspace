@@ -1,0 +1,321 @@
+[gd_scene load_steps=34 format=3 uid="uid://c7nkqmqdjh2ud"]
+
+[ext_resource type="Script" uid="uid://dbr81rxantexg" path="res://CharacterMovements.gd" id="2_tlwt5"]
+[ext_resource type="Script" uid="uid://da51jsckk1igw" path="res://UpgraePanel.gd" id="5_gbfbk"]
+[ext_resource type="Script" uid="uid://ceka1r41pk7c2" path="res://UpgradeManager.gd" id="5_pkg7o"]
+[ext_resource type="Script" uid="uid://b8b2yyovji2xs" path="res://PlayerData.gd" id="6_gbfbk"]
+[ext_resource type="Script" uid="uid://doxs6abm1iku" path="res://UI.gd" id="7_ioo17"]
+[ext_resource type="Script" uid="uid://iqiqw747i7vw" path="res://PlayerHud.gd" id="7_wse8f"]
+[ext_resource type="Shader" uid="uid://s0m04p3v6sjb" path="res://sky.gdshader" id="9_ic0uy"]
+[ext_resource type="Script" uid="uid://dmpwjwj4nil0" path="res://CaveSpawner.gd" id="9_ioo17"]
+[ext_resource type="PackedScene" uid="uid://2evscrgnkyr4" path="res://cave.tscn" id="10_ic0uy"]
+[ext_resource type="Script" uid="uid://cqxhnudkjfm48" path="res://LiftZone.gd" id="10_wse8f"]
+[ext_resource type="AudioStream" uid="uid://dw1kn1c1r615l" path="res://08 - Minecraft.mp3" id="11_ic0uy"]
+
+[sub_resource type="VoxelGeneratorFlat" id="VoxelGeneratorFlat_wse8f"]
+
+[sub_resource type="VoxelMesherTransvoxel" id="VoxelMesherTransvoxel_wse8f"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fj7yv"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_tlwt5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fj7yv"]
+size = Vector3(7, 0.5, 5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gbfbk"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_tlwt5"]
+material = SubResource("ShaderMaterial_gbfbk")
+size = Vector3(7, 0.5, 5)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ic0uy"]
+height = 19.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wse8f"]
+height = 19.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wse8f"]
+transparency = 1
+blend_mode = 4
+depth_draw_mode = 2
+shading_mode = 0
+albedo_color = Color(0.568627, 0.890196, 1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ic0uy"]
+transparency = 1
+blend_mode = 4
+depth_draw_mode = 2
+albedo_color = Color(0.138449, 0.977863, 0.693096, 1)
+emission_enabled = true
+emission = Color(0.266849, 0.553364, 0.59509, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gbfbk"]
+material = SubResource("StandardMaterial3D_ic0uy")
+size = Vector3(1, 0.1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ioo17"]
+size = Vector3(1, 1, 0.1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ioo17"]
+bg_color = Color(0.994705, 0.609126, 0.61977, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wse8f"]
+bg_color = Color(0.956863, 0.0352941, 0.239216, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ic0uy"]
+bg_color = Color(0.764584, 0.892291, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k3n1d"]
+bg_color = Color(0.32095, 0.4569, 0.810382, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2o6r5"]
+bg_color = Color(0.773023, 0.959393, 0.816408, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_70uel"]
+bg_color = Color(0.383351, 0.580406, 0.288891, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ic0uy"]
+shader = ExtResource("9_ic0uy")
+shader_parameter/star_density = 275.0
+shader_parameter/star_threshold = 0.95
+shader_parameter/star_brightness = 1.0
+
+[sub_resource type="Sky" id="Sky_k3n1d"]
+sky_material = SubResource("ShaderMaterial_ic0uy")
+
+[sub_resource type="Environment" id="Environment_2o6r5"]
+background_mode = 2
+sky = SubResource("Sky_k3n1d")
+
+[node name="World" type="Node3D"]
+
+[node name="ground" type="VoxelTerrain" parent="."]
+generator = SubResource("VoxelGeneratorFlat_wse8f")
+mesher = SubResource("VoxelMesherTransvoxel_wse8f")
+
+[node name="player" type="CharacterBody3D" parent="." groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+script = ExtResource("2_tlwt5")
+
+[node name="Camera3D" type="Camera3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+current = true
+
+[node name="dig_ray" type="RayCast3D" parent="player/Camera3D"]
+target_position = Vector3(0, 0, -5)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="player/Camera3D"]
+light_color = Color(0.997131, 0.706841, 0.560662, 1)
+light_energy = 1.293
+light_volumetric_fog_energy = 0.0
+spot_range = 17.632
+spot_attenuation = 0.39
+
+[node name="click_ray" type="RayCast3D" parent="player/Camera3D"]
+target_position = Vector3(0, 0, -5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("CapsuleShape3D_fj7yv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("CapsuleMesh_tlwt5")
+
+[node name="VoxelViewer" type="VoxelViewer" parent="player"]
+view_distance = 64
+
+[node name="platform" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="platform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.25, 2)
+shape = SubResource("BoxShape3D_fj7yv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="platform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 19.25, 2)
+mesh = SubResource("BoxMesh_tlwt5")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="platform"]
+transform = Transform3D(1, 0, 0, 0, 0.258819, -0.965926, 0, 0.965926, 0.258819, -3, 0, 5)
+light_energy = 0.192
+light_indirect_energy = 0.5
+
+[node name="liftZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 7, 0)
+script = ExtResource("10_wse8f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="liftZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.70553, 0)
+shape = SubResource("CylinderShape3D_ic0uy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="liftZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+mesh = SubResource("CylinderMesh_wse8f")
+surface_material_override/0 = SubResource("StandardMaterial3D_wse8f")
+
+[node name="UpgradePanel" type="StaticBody3D" parent="." groups=["UpgradePanel"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, -0.5)
+script = ExtResource("5_gbfbk")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="UpgradePanel"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("BoxMesh_gbfbk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UpgradePanel"]
+shape = SubResource("BoxShape3D_ioo17")
+
+[node name="Ui" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("7_ioo17")
+
+[node name="UpgradeUi" type="Panel" parent="Ui"]
+layout_mode = 0
+offset_left = 251.0
+offset_top = 162.0
+offset_right = 767.0
+offset_bottom = 406.0
+
+[node name="Radius" type="Label" parent="Ui/UpgradeUi"]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 64.0
+offset_right = 141.0
+offset_bottom = 102.0
+text = "Dig Radius"
+
+[node name="RadiusButton" type="Button" parent="Ui/UpgradeUi"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 131.0
+offset_right = 149.0
+offset_bottom = 192.0
+text = "Upgrade radius
+"
+
+[node name="Speed" type="Label" parent="Ui/UpgradeUi"]
+layout_mode = 0
+offset_left = 186.0
+offset_top = 70.0
+offset_right = 279.0
+offset_bottom = 108.0
+text = "Dig Speed"
+
+[node name="SpeedButton" type="Button" parent="Ui/UpgradeUi"]
+layout_mode = 0
+offset_left = 174.0
+offset_top = 131.0
+offset_right = 300.0
+offset_bottom = 187.0
+text = "Upgrade Speed"
+
+[node name="Brightness" type="Label" parent="Ui/UpgradeUi"]
+layout_mode = 0
+offset_left = 323.0
+offset_top = 70.0
+offset_right = 480.0
+offset_bottom = 110.0
+text = "Helmet Brightness"
+
+[node name="LightButton" type="Button" parent="Ui/UpgradeUi"]
+layout_mode = 0
+offset_left = 338.0
+offset_top = 140.0
+offset_right = 461.0
+offset_bottom = 191.0
+text = "Upgrade Light"
+
+[node name="PlayerHUD" type="Control" parent="Ui"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 3
+anchors_preset = 0
+offset_left = -12.0
+offset_top = -4.0
+offset_right = 488.0
+offset_bottom = 201.0
+script = ExtResource("7_wse8f")
+
+[node name="HealthBar" type="ProgressBar" parent="Ui/PlayerHUD"]
+custom_minimum_size = Vector2(250, 10)
+layout_direction = 2
+layout_mode = 2
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 270.0
+offset_bottom = 45.0
+size_flags_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_ioo17")
+theme_override_styles/fill = SubResource("StyleBoxFlat_wse8f")
+step = 1.0
+value = 50.0
+show_percentage = false
+
+[node name="WaterBar" type="ProgressBar" parent="Ui/PlayerHUD"]
+custom_minimum_size = Vector2(250, 10)
+layout_mode = 2
+offset_left = 20.0
+offset_top = 55.0
+offset_right = 270.0
+offset_bottom = 80.0
+theme_override_styles/background = SubResource("StyleBoxFlat_ic0uy")
+theme_override_styles/fill = SubResource("StyleBoxFlat_k3n1d")
+step = 0.1
+show_percentage = false
+
+[node name="EnergyBar" type="ProgressBar" parent="Ui/PlayerHUD"]
+custom_minimum_size = Vector2(250, 10)
+layout_mode = 2
+offset_left = 20.0
+offset_top = 90.0
+offset_right = 270.0
+offset_bottom = 115.0
+theme_override_styles/background = SubResource("StyleBoxFlat_2o6r5")
+theme_override_styles/fill = SubResource("StyleBoxFlat_70uel")
+step = 1.0
+show_percentage = false
+
+[node name="Money" type="Label" parent="Ui/PlayerHUD"]
+layout_mode = 2
+offset_left = 27.0
+offset_top = 124.0
+offset_right = 127.0
+offset_bottom = 148.0
+text = "Total Cash:"
+
+[node name="Coords" type="Label" parent="Ui/PlayerHUD"]
+layout_mode = 0
+offset_left = 1068.0
+offset_top = 14.0
+offset_right = 1139.0
+offset_bottom = 44.0
+text = "(0,0,0)"
+
+[node name="PlayerData" type="Node" parent="."]
+script = ExtResource("6_gbfbk")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2o6r5")
+
+[node name="UpgradeManager" type="Node" parent="."]
+script = ExtResource("5_pkg7o")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.449397, 0.219186, 0, 0.438371, 0.898794, -0.5, -0.778378, 0.379641, 0, 109.316, 47.6809)
+light_color = Color(0.92549, 0.627451, 0.419608, 1)
+light_energy = 0.75
+light_indirect_energy = 2.0
+light_volumetric_fog_energy = 1.5
+shadow_enabled = true
+
+[node name="CaveSpawner" type="Node3D" parent="."]
+script = ExtResource("9_ioo17")
+cave_scene = ExtResource("10_ic0uy")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_ic0uy")
+volume_db = -7.432
+autoplay = true
+parameters/looping = true

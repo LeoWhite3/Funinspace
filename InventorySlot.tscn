@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://gnqdnf01tl3y"]
+
+[ext_resource type="Script" uid="uid://c166v1g8jb6a" path="res://InventorySlot.gd" id="1_4r0iv"]
+[ext_resource type="Shader" uid="uid://djrd5pr8d27f2" path="res://shop.gdshader" id="1_e07lh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g7v3p"]
+shader = ExtResource("1_e07lh")
+shader_parameter/background_color = Color(0.1, 0.1, 0.1, 0.7)
+shader_parameter/border_color = Color(1, 1, 1, 0.2)
+shader_parameter/border_size = 0.025
+
+[node name="InventorySlot" type="Panel"]
+material = SubResource("ShaderMaterial_g7v3p")
+custom_minimum_size = Vector2(64, 64)
+offset_right = 96.0
+offset_bottom = 91.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_4r0iv")
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Count" type="Label" parent="."]
+layout_mode = 2
+offset_top = 4.0
+offset_right = 1.0
+offset_bottom = 27.0
